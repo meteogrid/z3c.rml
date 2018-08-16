@@ -11,6 +11,8 @@
 # FOR A PARTICULAR PURPOSE.
 #
 ##############################################################################
+import subprocess
+from backports import tempfile
 """RML Attribute Implementation
 """
 import collections
@@ -29,6 +31,7 @@ import zope.schema
 from lxml import etree
 from importlib import import_module
 from z3c.rml import interfaces, SampleStyleSheet
+
 
 MISSING = object()
 logger = logging.getLogger("z3c.rml")
@@ -401,7 +404,19 @@ class Image(File):
     def fromUnicode(self, value):
         if value.lower().endswith('.svg') or value.lower().endswith('.svgz'):
             return self._load_svg(value)
-        fileObj = super(Image, self).fromUnicode(value)
+        if value.lower().endswith('.pdf'):
+            fileObj = super(Image, self).fromUnicode(value)
+            with tempfile.TemporaryDirectory() as tmpdirname:
+                input_name = os.path.join(tmpdirname, 'input.pdf')
+                output_name = os.path.join(tmpdirname, 'output.png')
+                with open(input_name,'wb') as input_:
+                    input_.write(fileObj.read())
+                status = subprocess.Popen(gs_command(input_name, output_name)).wait()
+                if status:
+                    raise RuntimeError(status)
+                fileObj = super(Image, self).fromUnicode(output_name)
+        else:
+            fileObj = super(Image, self).fromUnicode(value)
         if self.onlyOpen:
             return fileObj
         return reportlab.lib.utils.ImageReader(fileObj)
@@ -647,3 +662,9 @@ class XMLContent(RawXMLContent):
     def get(self):
         text = super(XMLContent, self).get()
         return text.strip().replace('\t', ' ')
+
+def gs_command(input_name, output_name):
+    return ('gs', '-q', '-sNOPAUSE', '-dNOCACHE', '-dNOPAUSE', '-dSAFER', '-sDEVICE=pngalpha',
+            '-dTextAlphaBits=4', '-dGraphicsAlphaBits=4', '-r300',
+            '-sOutputFile=%s' % output_name,
+            input_name, '-c', 'quit')

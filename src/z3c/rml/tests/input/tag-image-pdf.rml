@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE document SYSTEM "rml.dtd">
+
+<document
+    filename="tag-image-pdf.pdf"
+    xmlns:doc="http://namespaces.zope.org/rml/doc">
+  <pageDrawing>
+
+    <image file="[z3c.rml.tests]/input/images/logo.pdf"
+        x="10mm" y="10mm" />
+
+    <image file="[z3c.rml.tests]/input/images/logo.pdf"
+        x="100mm" y="10mm" width="50mm" />
+
+    <image file="[z3c.rml.tests]/input/images/logo.pdf"
+        x="10mm" y="100mm" height="50mm" />
+
+    <image file="[z3c.rml.tests]/input/images/logo.pdf"
+        x="100mm" y="100mm" width="50mm" preserveAspectRatio="true" />
+
+    <image file="[z3c.rml.tests]/input/images/logo.pdf"
+        x="10mm" y="200mm" height="50mm" preserveAspectRatio="true" />
+
+    <image file="[z3c.rml.tests]/input/images/logo.pdf"
+        x="100mm" y="200mm" width="20mm" height="50mm" preserveAspectRatio="true" />
+
+
+  </pageDrawing>
+</document>
