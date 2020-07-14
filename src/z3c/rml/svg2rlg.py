@@ -986,7 +986,7 @@ class Renderer:
             if len(points) == 0:
                 return
 
-            points = map(parseLength, re.split('[ ,]+', points))
+            points = list(map(parseLength, re.split('[ ,]+', points)))
 
             shape = Polygon(points)
             self.addShape(parent, node, shape)
