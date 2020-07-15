@@ -1470,7 +1470,10 @@ class Renderer:
 
             # Sett attribute of shape
             if hasattr(shape, attrname):
-                setattr(shape, attrname, converter(value))
+                try:
+                    setattr(shape, attrname, converter(value))
+                except SVGError:
+                    pass
 
         # defaults
         if isinstance(shape, String):
