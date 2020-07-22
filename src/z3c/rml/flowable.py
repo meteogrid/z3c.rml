@@ -963,7 +963,7 @@ class Image(Flowable):
         preserveAspectRatio = args.pop('preserveAspectRatio', False)
         if preserveAspectRatio:
             img = utils.ImageReader(args['filename'])
-            args['filename'].seek(0)
+            #args['filename'].seek(0)
             iw, ih = img.getSize()
             if 'width' in args and 'height' not in args:
                 args['height'] = args['width'] * ih / iw
